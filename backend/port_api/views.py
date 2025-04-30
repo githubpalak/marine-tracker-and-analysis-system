@@ -18,7 +18,7 @@ class PortViewSet(viewsets.ModelViewSet):
         try:
             # Load sample port data (in a real project, you would fetch from an API or load from a file)
             sample_ports = [
-                {"name": "Rotterdam", "country": "Netherlands", "latitude": 51.9225, "longitude": 4.47917, 
+                {"name": "Rotterdam", "country": "Netherlands", "latitude": 41.9225, "longitude": 4.47917, 
                  "size": "Large", "un_locode": "NLRTM"},
                 {"name": "Singapore", "country": "Singapore", "latitude": 1.29027, "longitude": 103.851, 
                  "size": "Large", "un_locode": "SGSIN"},

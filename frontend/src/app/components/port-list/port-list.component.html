@@ -1,0 +1,76 @@
+
+<div class="port-list-container">
+    <div class="header">
+      <h1>Port List</h1>
+      <div class="search-filter">
+        <input 
+          type="text" 
+          placeholder="Search ports..." 
+          [(ngModel)]="searchTerm"
+          (input)="applyFilters()"
+        >
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th (click)="sort('name')">
+              Name
+              <span *ngIf="sortColumn === 'name'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('country')">
+              Country
+              <span *ngIf="sortColumn === 'country'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('size')">
+              Size
+              <span *ngIf="sortColumn === 'size'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('un_locode')">
+              UN/LOCODE
+              <span *ngIf="sortColumn === 'un_locode'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('latitude')">
+              Latitude
+              <span *ngIf="sortColumn === 'latitude'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('longitude')">
+              Longitude
+              <span *ngIf="sortColumn === 'longitude'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let port of filteredPorts">
+            <td>{{ port.name }}</td>
+            <td>{{ port.country }}</td>
+            <td>{{ port.size }}</td>
+            <td>{{ port.un_locode }}</td>
+            <td>{{ port.latitude.toFixed(5) }}</td>
+            <td>{{ port.longitude.toFixed(5) }}</td>
+            <td class="actions">
+              <button class="view-btn" (click)="viewOnMap(port)">View on Map</button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredPorts.length === 0">
+            <td colspan="7" class="no-data">No ports found matching your search criteria.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>

@@ -1,0 +1,90 @@
+<div class="vessel-list-container">
+      <div class="header">
+        <h1>Vessel List</h1>
+        <div class="search-filter">
+          <input 
+            type="text" 
+            placeholder="Search vessels..." 
+            [(ngModel)]="searchTerm"
+            (input)="applyFilters()"
+          >
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th (click)="sort('name')">
+                Name
+                <span *ngIf="sortColumn === 'name'" class="sort-indicator">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th (click)="sort('mmsi')">
+                MMSI
+                <span *ngIf="sortColumn === 'mmsi'" class="sort-indicator">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th (click)="sort('vessel_type')">
+                Type
+                <span *ngIf="sortColumn === 'vessel_type'" class="sort-indicator">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th (click)="sort('flag')">
+                Flag
+                <span *ngIf="sortColumn === 'flag'" class="sort-indicator">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th (click)="sort('length')">
+                Length (m)
+                <span *ngIf="sortColumn === 'length'" class="sort-indicator">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th (click)="sort('width')">
+                Width (m)
+                <span *ngIf="sortColumn === 'width'" class="sort-indicator">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th (click)="sort('last_position.status')">
+                Status
+                <span *ngIf="sortColumn === 'last_position.status'" class="sort-indicator">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th (click)="sort('last_position.speed')">
+                Speed (knots)
+                <span *ngIf="sortColumn === 'last_position.speed'" class="sort-indicator">
+                  {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let vessel of filteredVessels">
+              <td>{{ vessel.name }}</td>
+              <td>{{ vessel.mmsi }}</td>
+              <td>{{ vessel.vessel_type }}</td>
+              <td>{{ vessel.flag || 'Unknown' }}</td>
+              <td>{{ vessel.length }}</td>
+              <td>{{ vessel.width }}</td>
+              <td>{{ getVesselStatus(vessel.last_position.status) }}</td>
+              <td>{{ vessel.last_position.speed }}</td>
+              <td class="actions">
+                <button class="view-btn" (click)="viewOnMap(vessel)">View on Map</button>
+                <button class="add-fleet-btn" (click)="addToFleet(vessel)">Add to Fleet</button>
+              </td>
+            </tr>
+            <tr *ngIf="filteredVessels.length === 0">
+              <td colspan="9" class="no-data">No vessels found matching your search criteria.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
