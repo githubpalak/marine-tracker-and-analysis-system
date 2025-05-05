@@ -1,4 +1,3 @@
-// map.component.ts
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as L from 'leaflet';
@@ -22,31 +21,32 @@ export class MapComponent implements OnInit, AfterViewInit {
   vessels: Vessel[] = [];
   ports: Port[] = [];
   lighthouses: Lighthouse[] = [];
-  
-  vesselMarkers: L.LayerGroup = L.layerGroup();
-  portMarkers: L.LayerGroup = L.layerGroup();
-  lighthouseMarkers: L.LayerGroup = L.layerGroup();
-  
+
+  vesselMarkers = L.layerGroup();
+  portMarkers = L.layerGroup();
+  lighthouseMarkers = L.layerGroup();
+
   selectedVessel: Vessel | null = null;
   selectedPort: Port | null = null;
   selectedLighthouse: Lighthouse | null = null;
-  
+
   showVessels = true;
   showPorts = true;
   showLighthouses = true;
-  
-  vesselIcon = L.icon({
-    iconUrl: 'assets/vessel-icon.png',
-    iconSize: [24, 24],
-    iconAnchor: [12, 12]
-  });
-  
+
+  // Just the URLs — we’ll use them in divIcon directly
+  vesselIconUrls = [
+    'assets/vessel-icon-red.png',
+    'assets/vessel-icon-blue.png',
+    'assets/vessel-icon-green.png'
+  ];
+
   portIcon = L.icon({
     iconUrl: 'assets/port-icon.png',
     iconSize: [24, 24],
     iconAnchor: [12, 12]
   });
-  
+
   lighthouseIcon = L.icon({
     iconUrl: 'assets/lighthouse-icon.png',
     iconSize: [24, 24],
@@ -89,83 +89,83 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.vessels = data.vessels;
       this.ports = data.ports;
       this.lighthouses = data.lighthouses;
-      
+
       this.addVesselsToMap();
       this.addPortsToMap();
       this.addLighthousesToMap();
-      
-      // Center map on the data points
+
       this.centerMapOnData();
     });
   }
 
   addVesselsToMap(): void {
     this.vesselMarkers.clearLayers();
-    
+
     this.vessels.forEach(vessel => {
-      const marker = L.marker(
-        [vessel.last_position.latitude, vessel.last_position.longitude], 
-        { icon: this.vesselIcon }
-      ).addTo(this.vesselMarkers);
-      
-      marker.bindTooltip(vessel.name);
-      marker.on('click', () => {
-        this.selectVessel(vessel);
+      const iconUrl = this.getRandomVesselIconUrl();
+      const heading = vessel.last_position?.heading || 0;
+
+      const icon = L.divIcon({
+        className: 'vessel-icon',
+        html: `<img src="${iconUrl}" style="transform: rotate(${heading}deg); width: 7px; height: 17px;" />`,
+        iconSize: [6, 10],
+        iconAnchor: [3, 5]
       });
+
+      const marker = L.marker(
+        [vessel.last_position.latitude, vessel.last_position.longitude],
+        { icon: icon }
+      ).addTo(this.vesselMarkers);
+
+      marker.bindTooltip(vessel.name);
+      marker.on('click', () => this.selectVessel(vessel));
     });
   }
 
   addPortsToMap(): void {
     this.portMarkers.clearLayers();
-    
+
     this.ports.forEach(port => {
       const marker = L.marker(
-        [port.latitude, port.longitude], 
+        [port.latitude, port.longitude],
         { icon: this.portIcon }
       ).addTo(this.portMarkers);
-      
+
       marker.bindTooltip(port.name);
-      marker.on('click', () => {
-        this.selectPort(port);
-      });
+      marker.on('click', () => this.selectPort(port));
     });
   }
 
   addLighthousesToMap(): void {
     this.lighthouseMarkers.clearLayers();
-    
+
     this.lighthouses.forEach(lighthouse => {
       const marker = L.marker(
-        [lighthouse.latitude, lighthouse.longitude], 
+        [lighthouse.latitude, lighthouse.longitude],
         { icon: this.lighthouseIcon }
       ).addTo(this.lighthouseMarkers);
-      
+
       marker.bindTooltip(lighthouse.name);
-      marker.on('click', () => {
-        this.selectLighthouse(lighthouse);
-      });
+      marker.on('click', () => this.selectLighthouse(lighthouse));
     });
   }
 
   centerMapOnData(): void {
     const allPoints: L.LatLngExpression[] = [];
-    
-    this.vessels.forEach(vessel => {
-      allPoints.push([vessel.last_position.latitude, vessel.last_position.longitude]);
-    });
-    
-    this.ports.forEach(port => {
-      allPoints.push([port.latitude, port.longitude]);
-    });
-    
-    this.lighthouses.forEach(lighthouse => {
-      allPoints.push([lighthouse.latitude, lighthouse.longitude]);
-    });
-    
+
+    this.vessels.forEach(v => allPoints.push([v.last_position.latitude, v.last_position.longitude]));
+    this.ports.forEach(p => allPoints.push([p.latitude, p.longitude]));
+    this.lighthouses.forEach(l => allPoints.push([l.latitude, l.longitude]));
+
     if (allPoints.length > 0) {
       const bounds = L.latLngBounds(allPoints);
       this.map.fitBounds(bounds);
     }
+  }
+
+  getRandomVesselIconUrl(): string {
+    const index = Math.floor(Math.random() * this.vesselIconUrls.length);
+    return this.vesselIconUrls[index];
   }
 
   selectVessel(vessel: Vessel): void {
@@ -193,33 +193,21 @@ export class MapComponent implements OnInit, AfterViewInit {
     switch (layer) {
       case 'vessels':
         this.showVessels = !this.showVessels;
-        if (this.showVessels) {
-          this.vesselMarkers.addTo(this.map);
-        } else {
-          this.vesselMarkers.removeFrom(this.map);
-        }
+        this.showVessels ? this.vesselMarkers.addTo(this.map) : this.vesselMarkers.removeFrom(this.map);
         break;
       case 'ports':
         this.showPorts = !this.showPorts;
-        if (this.showPorts) {
-          this.portMarkers.addTo(this.map);
-        } else {
-          this.portMarkers.removeFrom(this.map);
-        }
+        this.showPorts ? this.portMarkers.addTo(this.map) : this.portMarkers.removeFrom(this.map);
         break;
       case 'lighthouses':
         this.showLighthouses = !this.showLighthouses;
-        if (this.showLighthouses) {
-          this.lighthouseMarkers.addTo(this.map);
-        } else {
-          this.lighthouseMarkers.removeFrom(this.map);
-        }
+        this.showLighthouses ? this.lighthouseMarkers.addTo(this.map) : this.lighthouseMarkers.removeFrom(this.map);
         break;
     }
   }
 
   getVesselStatus(status: string): string {
-    const statusMap: {[key: string]: string} = {
+    const statusMap: { [key: string]: string } = {
       '0': 'Under way using engine',
       '1': 'At anchor',
       '2': 'Not under command',
@@ -231,18 +219,17 @@ export class MapComponent implements OnInit, AfterViewInit {
       '8': 'Under way sailing',
       '9': 'Reserved for future use',
       '10': 'Reserved for future use',
-      '11': 'Power-driven vessel towing astern',
-      '12': 'Power-driven vessel pushing ahead or towing alongside',
-      '13': 'Reserved for future use',
-      '14': 'AIS-SART (active)',
+      '11': 'Towing astern',
+      '12': 'Pushing ahead/towing alongside',
+      '13': 'Reserved',
+      '14': 'AIS-SART',
       '15': 'Not defined'
     };
-    
+
     return statusMap[status] || 'Unknown';
   }
 
   formatDate(timestamp: string): string {
-    const date = new Date(timestamp);
-    return date.toLocaleString();
+    return new Date(timestamp).toLocaleString();
   }
 }
