@@ -122,19 +122,53 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
 
+  // addPortsToMap(): void {
+  //   this.portMarkers.clearLayers();
+
+  //   this.ports.forEach(port => {
+  //     const marker = L.marker(
+  //       [port.latitude, port.longitude],
+  //       { icon: this.portIcon }
+  //     ).addTo(this.portMarkers);
+
+  //     marker.bindTooltip(port.name);
+  //     marker.on('click', () => this.selectPort(port));
+  //   });
+  // }
   addPortsToMap(): void {
-    this.portMarkers.clearLayers();
+  this.portMarkers.clearLayers();
 
-    this.ports.forEach(port => {
-      const marker = L.marker(
-        [port.latitude, port.longitude],
-        { icon: this.portIcon }
-      ).addTo(this.portMarkers);
+  // Use a more visible port icon
+  const portIcon = L.icon({
+    iconUrl: 'assets/port-icon.png',
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -14]
+  });
 
-      marker.bindTooltip(port.name);
-      marker.on('click', () => this.selectPort(port));
-    });
-  }
+  this.ports.forEach(port => {
+    // Create marker
+    const marker = L.marker(
+      [port.latitude, port.longitude],
+      { icon: portIcon }
+    ).addTo(this.portMarkers);
+
+    // Add tooltip with port name
+    marker.bindTooltip(port.name);
+    
+    // Add a popup with basic info
+    marker.bindPopup(`
+      <div class="popup-content">
+        <h3>${port.name}</h3>
+        <p><strong>Country:</strong> ${port.country}</p>
+        <p><strong>UN/LOCODE:</strong> ${port.un_locode || 'N/A'}</p>
+      </div>
+    `);
+    
+    // Handle click event
+    marker.on('click', () => this.selectPort(port));
+  });
+}
 
   addLighthousesToMap(): void {
     this.lighthouseMarkers.clearLayers();
