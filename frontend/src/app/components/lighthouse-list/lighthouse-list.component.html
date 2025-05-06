@@ -1,4 +1,4 @@
-
+<!-- 
 <div class="lighthouse-list-container">
     <div class="header">
       <h1>Lighthouse List</h1>
@@ -22,7 +22,7 @@
                 {{ sortDirection === 'asc' ? '↑' : '↓' }}
               </span>
             </th>
-            <!-- <th (click)="sort('country')">
+            <th (click)="sort('country')">
               Country
               <span *ngIf="sortColumn === 'country'" class="sort-indicator">
                 {{ sortDirection === 'asc' ? '↑' : '↓' }}
@@ -39,7 +39,7 @@
               <span *ngIf="sortColumn === 'year_built'" class="sort-indicator">
                 {{ sortDirection === 'asc' ? '↑' : '↓' }}
               </span>
-            </th> -->
+            </th>
             <th (click)="sort('latitude')">
               Latitude
               <span *ngIf="sortColumn === 'latitude'" class="sort-indicator">
@@ -58,9 +58,9 @@
         <tbody>
           <tr *ngFor="let lighthouse of filteredLighthouses">
             <td>{{ lighthouse.name }}</td>
-            <!-- <td>{{ lighthouse.country }}</td>
+            <td>{{ lighthouse.country }}</td>
             <td>{{ lighthouse.height !== null ? lighthouse.height : 'N/A' }}</td>
-            <td>{{ lighthouse.year_built !== null ? lighthouse.year_built : 'N/A' }}</td> -->
+            <td>{{ lighthouse.year_built !== null ? lighthouse.year_built : 'N/A' }}</td>
             <td>{{ lighthouse.latitude.toFixed(5) }}</td>
             <td>{{ lighthouse.longitude.toFixed(5) }}</td>
             <td class="actions">
@@ -72,5 +72,111 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div> -->
+
+  <div class="lighthouse-list-container">
+    <div class="header">
+      <h1>Lighthouse List</h1>
+      <div class="search-filter">
+        <input 
+          type="text" 
+          placeholder="Search lighthouses..." 
+          [(ngModel)]="searchTerm"
+          (input)="applyFilters()"
+        >
+      </div>
+    </div>
+  
+    <div class="table-container">
+      <div *ngIf="loading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Loading lighthouses...</p>
+      </div>
+  
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th (click)="sort('name')">
+              Name
+              <span *ngIf="sortColumn === 'name'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('latitude')">
+              Latitude
+              <span *ngIf="sortColumn === 'latitude'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('longitude')">
+              Longitude
+              <span *ngIf="sortColumn === 'longitude'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th>Website</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let lighthouse of filteredLighthouses">
+            <td>{{ lighthouse.name }}</td>
+            <td>{{ lighthouse.latitude.toFixed(5) }}</td>
+            <td>{{ lighthouse.longitude.toFixed(5) }}</td>
+            <td>
+              <a *ngIf="lighthouse.website" href="{{ lighthouse.website }}" target="_blank" rel="noopener noreferrer">
+                Visit Website
+              </a>
+              <span *ngIf="!lighthouse.website">N/A</span>
+            </td>
+            <td class="actions">
+              <button class="view-btn" (click)="viewOnMap(lighthouse)">View on Map</button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredLighthouses.length === 0 && !loading">
+            <td colspan="5" class="no-data">No lighthouses found matching your search criteria.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Pagination Controls -->
+    <div class="pagination" *ngIf="totalPages > 1 && searchTerm.trim() === ''">
+      <button 
+        [disabled]="currentPage === 1" 
+        (click)="previousPage()" 
+        class="pagination-btn"
+        [class.disabled]="currentPage === 1"
+      >
+        &laquo; Previous
+      </button>
+      
+      <div class="page-numbers">
+        <ng-container *ngFor="let page of getPages()">
+          <button 
+            *ngIf="page > 0" 
+            [class.active]="page === currentPage" 
+            (click)="goToPage(page)" 
+            class="page-number"
+          >
+            {{ page }}
+          </button>
+          <span *ngIf="page < 0" class="ellipsis">...</span>
+        </ng-container>
+      </div>
+      
+      <button 
+        [disabled]="currentPage === totalPages" 
+        (click)="nextPage()" 
+        class="pagination-btn"
+        [class.disabled]="currentPage === totalPages"
+      >
+        Next &raquo;
+      </button>
+    </div>
+  
+    <div class="pagination-info" *ngIf="totalItems > 0">
+      Showing {{ filteredLighthouses.length }} of {{ totalItems }} lighthouses
     </div>
   </div>
