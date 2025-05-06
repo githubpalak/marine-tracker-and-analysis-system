@@ -1,4 +1,4 @@
-<div class="map-container">
+<!-- <div class="map-container">
   <div id="map" class="map"></div>
 
   <div *ngIf="selectedVessel" class="details-panel vessel-details">
@@ -60,6 +60,142 @@
         <p><strong>Size:</strong> {{ selectedPort.size }}</p>
         <p><strong>UN/LOCODE:</strong> {{ selectedPort.un_locode }}</p>
         <p>
+          <strong>Position:</strong> {{ selectedPort.latitude.toFixed(5) }},
+          {{ selectedPort.longitude.toFixed(5) }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedLighthouse" class="details-panel lighthouse-details">
+    <div class="details-header">
+      <h3>{{ selectedLighthouse.name }}</h3>
+      <button class="close-btn" (click)="clearSelection()">×</button>
+    </div>
+    <div class="details-content">
+      <div *ngIf="selectedLighthouse.image_url" class="details-image">
+        <img
+          [src]="selectedLighthouse.image_url"
+          alt="{{ selectedLighthouse.name }}"
+        />
+      </div>
+      <div class="details-info">
+        <p><strong>Country:</strong> {{ selectedLighthouse.country }}</p>
+        <p>
+          <strong>Position:</strong>
+          {{ selectedLighthouse.latitude.toFixed(5) }},
+          {{ selectedLighthouse.longitude.toFixed(5) }}
+        </p>
+        <p *ngIf="selectedLighthouse.height">
+          <strong>Height:</strong> {{ selectedLighthouse.height }} meters
+        </p>
+        <p *ngIf="selectedLighthouse.year_built">
+          <strong>Built in:</strong> {{ selectedLighthouse.year_built }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="map-controls">
+    <div class="layer-control">
+      <h4>Map Layers</h4>
+      <div class="layer-option">
+        <input
+          type="checkbox"
+          id="vessels-layer"
+          [checked]="showVessels"
+          (change)="toggleLayer('vessels')"
+        />
+        <label for="vessels-layer">Vessels</label>
+      </div>
+      <div class="layer-option">
+        <input
+          type="checkbox"
+          id="ports-layer"
+          [checked]="showPorts"
+          (change)="toggleLayer('ports')"
+        />
+        <label for="ports-layer">Ports</label>
+      </div>
+      <div class="layer-option">
+        <input
+          type="checkbox"
+          id="lighthouses-layer"
+          [checked]="showLighthouses"
+          (change)="toggleLayer('lighthouses')"
+        />
+        <label for="lighthouses-layer">Lighthouses</label>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+<div class="map-container">
+  <div id="map" class="map"></div>
+
+  <div *ngIf="selectedVessel" class="details-panel vessel-details">
+    <div class="details-header">
+      <h3>{{ selectedVessel.name }}</h3>
+      <button class="close-btn" (click)="clearSelection()">×</button>
+    </div>
+    <div class="details-content">
+      <div *ngIf="selectedVessel.image_url" class="details-image">
+        <img [src]="selectedVessel.image_url" alt="{{ selectedVessel.name }}" />
+      </div>
+      <div class="details-info">
+        <p><strong>MMSI:</strong> {{ selectedVessel.mmsi }}</p>
+        <p><strong>Type:</strong> {{ selectedVessel.vessel_type }}</p>
+        <p><strong>Flag:</strong> {{ selectedVessel.flag || "Unknown" }}</p>
+        <p>
+          <strong>Dimensions:</strong> {{ selectedVessel.length }} ×
+          {{ selectedVessel.width }} m
+        </p>
+        <p>
+          <strong>Position:</strong>
+          {{ selectedVessel.last_position.latitude.toFixed(5) }},
+          {{ selectedVessel.last_position.longitude.toFixed(5) }}
+        </p>
+        <p>
+          <strong>Speed:</strong> {{ selectedVessel.last_position.speed }} knots
+        </p>
+        <p>
+          <strong>Heading:</strong>
+          {{
+            selectedVessel.last_position.heading === 511
+              ? "N/A"
+              : selectedVessel.last_position.heading + "°"
+          }}
+        </p>
+        <p>
+          <strong>Status:</strong>
+          {{ getVesselStatus(selectedVessel.last_position.status) }}
+        </p>
+        <p>
+          <strong>Last Updated:</strong>
+          {{ formatDate(selectedVessel.last_position.timestamp) }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="selectedPort" class="details-panel port-details">
+    <div class="details-header">
+      <h3>{{ selectedPort.Port_Name }}</h3>
+      <button class="close-btn" (click)="clearSelection()">×</button>
+    </div>
+    <div class="details-content">
+      <div class="details-info">
+        <p><strong>Country:</strong> {{ selectedPort.Country }}</p>
+        <p><strong>UN Code:</strong> {{ selectedPort.UN_Code }}</p>
+        <p><strong>Type:</strong> {{ selectedPort.Type }}</p>
+        <p><strong>Vessels in Port:</strong> {{ selectedPort.Vessels_in_Port }}</p>
+        <p><strong>Departures (Last 24 Hours):</strong> {{ selectedPort.Departures_Last_24_Hours }}</p>
+        <p><strong>Arrivals (Last 24 Hours):</strong> {{ selectedPort.Arrivals_Last_24_Hours }}</p>
+        <p><strong>Expected Arrivals:</strong> {{ selectedPort.Expected_Arrivals }}</p>
+        <p><strong>Local Area:</strong> {{ selectedPort.Area_Local }}</p>
+        <p><strong>Global Area:</strong> {{ selectedPort.Area_Global }}</p>
+        <p *ngIf="selectedPort.Also_known_as"><strong>Also known as:</strong> {{ selectedPort.Also_known_as }}</p>
+        <p *ngIf="selectedPort.latitude && selectedPort.longitude">
           <strong>Position:</strong> {{ selectedPort.latitude.toFixed(5) }},
           {{ selectedPort.longitude.toFixed(5) }}
         </p>

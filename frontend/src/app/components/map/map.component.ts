@@ -1,3 +1,274 @@
+// import { Component, OnInit, AfterViewInit } from '@angular/core';
+// import { CommonModule } from '@angular/common';
+// import * as L from 'leaflet';
+// import { VesselService } from '../../services/vessel.service';
+// import { PortService } from '../../services/port.service';
+// import { LighthouseService } from '../../services/lighthouse.service';
+// import { Vessel } from '../../models/vessel.model';
+// import { Port } from '../../models/port.model';
+// import { Lighthouse } from '../../models/lighthouse.model';
+// import { forkJoin } from 'rxjs';
+
+// @Component({
+//   selector: 'app-map',
+//   standalone: true,
+//   imports: [CommonModule],
+//   templateUrl: './map.component.html',
+//   styleUrls: ['./map.component.scss']
+// })
+// export class MapComponent implements OnInit, AfterViewInit {
+//   map!: L.Map;
+//   vessels: Vessel[] = [];
+//   ports: Port[] = [];
+//   lighthouses: Lighthouse[] = [];
+
+//   vesselMarkers = L.layerGroup();
+//   portMarkers = L.layerGroup();
+//   lighthouseMarkers = L.layerGroup();
+
+//   selectedVessel: Vessel | null = null;
+//   selectedPort: Port | null = null;
+//   selectedLighthouse: Lighthouse | null = null;
+
+//   showVessels = true;
+//   showPorts = true;
+//   showLighthouses = true;
+
+//   // Just the URLs — we’ll use them in divIcon directly
+//   vesselIconUrls = [
+//     'assets/vessel-icon-red.png',
+//     'assets/vessel-icon-blue.png',
+//     'assets/vessel-icon-green.png'
+//   ];
+
+//   portIcon = L.icon({
+//     iconUrl: 'assets/port-icon.png',
+//     iconSize: [24, 24],
+//     iconAnchor: [12, 12]
+//   });
+
+//   lighthouseIcon = L.icon({
+//     iconUrl: 'assets/lighthouse-icon.png',
+//     iconSize: [24, 24],
+//     iconAnchor: [12, 12]
+//   });
+
+//   constructor(
+//     private vesselService: VesselService,
+//     private portService: PortService,
+//     private lighthouseService: LighthouseService
+//   ) {}
+
+//   ngOnInit(): void {
+//     this.loadData();
+//   }
+
+//   ngAfterViewInit(): void {
+//     this.initMap();
+//   }
+
+//   initMap(): void {
+//     this.map = L.map('map').setView([0, 0], 3);
+
+//     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+//       maxZoom: 19,
+//       attribution: '© OpenStreetMap contributors'
+//     }).addTo(this.map);
+
+//     this.vesselMarkers.addTo(this.map);
+//     this.portMarkers.addTo(this.map);
+//     this.lighthouseMarkers.addTo(this.map);
+//   }
+
+//   loadData(): void {
+//     forkJoin({
+//       vessels: this.vesselService.getVessels(),
+//       ports: this.portService.getPorts(),
+//       lighthouses: this.lighthouseService.getLighthouses()
+//     }).subscribe(data => {
+//       this.vessels = data.vessels;
+//       this.ports = data.ports;
+//       this.lighthouses = data.lighthouses;
+
+//       this.addVesselsToMap();
+//       this.addPortsToMap();
+//       this.addLighthousesToMap();
+
+//       this.centerMapOnData();
+//     });
+//   }
+
+//   addVesselsToMap(): void {
+//     this.vesselMarkers.clearLayers();
+
+//     this.vessels.forEach(vessel => {
+//       const iconUrl = this.getRandomVesselIconUrl();
+//       const heading = vessel.last_position?.heading || 0;
+
+//       const icon = L.divIcon({
+//         className: 'vessel-icon',
+//         html: `<img src="${iconUrl}" style="transform: rotate(${heading}deg); width: 7px; height: 17px;" />`,
+//         iconSize: [6, 10],
+//         iconAnchor: [3, 5]
+//       });
+
+//       const marker = L.marker(
+//         [vessel.last_position.latitude, vessel.last_position.longitude],
+//         { icon: icon }
+//       ).addTo(this.vesselMarkers);
+
+//       marker.bindTooltip(vessel.name);
+//       marker.on('click', () => this.selectVessel(vessel));
+//     });
+//   }
+
+//   // addPortsToMap(): void {
+//   //   this.portMarkers.clearLayers();
+
+//   //   this.ports.forEach(port => {
+//   //     const marker = L.marker(
+//   //       [port.latitude, port.longitude],
+//   //       { icon: this.portIcon }
+//   //     ).addTo(this.portMarkers);
+
+//   //     marker.bindTooltip(port.name);
+//   //     marker.on('click', () => this.selectPort(port));
+//   //   });
+//   // }
+//   addPortsToMap(): void {
+//   this.portMarkers.clearLayers();
+
+//   // Use a more visible port icon
+//   const portIcon = L.icon({
+//     iconUrl: 'assets/port-icon.png',
+//     iconSize: [28, 28],
+//     iconAnchor: [14, 14],
+//     popupAnchor: [0, -14]
+//   });
+
+//   this.ports.forEach(port => {
+//     // Create marker
+//     const marker = L.marker(
+//       [port.latitude, port.longitude],
+//       { icon: portIcon }
+//     ).addTo(this.portMarkers);
+
+//     // Add tooltip with port name
+//     marker.bindTooltip(port.name);
+    
+//     // Add a popup with basic info
+//     marker.bindPopup(`
+//       <div class="popup-content">
+//         <h3>${port.name}</h3>
+//         <p><strong>Country:</strong> ${port.country}</p>
+//         <p><strong>UN/LOCODE:</strong> ${port.un_locode || 'N/A'}</p>
+//       </div>
+//     `);
+    
+//     // Handle click event
+//     marker.on('click', () => this.selectPort(port));
+//   });
+// }
+
+//   addLighthousesToMap(): void {
+//     this.lighthouseMarkers.clearLayers();
+
+//     this.lighthouses.forEach(lighthouse => {
+//       const marker = L.marker(
+//         [lighthouse.latitude, lighthouse.longitude],
+//         { icon: this.lighthouseIcon }
+//       ).addTo(this.lighthouseMarkers);
+
+//       marker.bindTooltip(lighthouse.name);
+//       marker.on('click', () => this.selectLighthouse(lighthouse));
+//     });
+//   }
+
+//   centerMapOnData(): void {
+//     const allPoints: L.LatLngExpression[] = [];
+
+//     this.vessels.forEach(v => allPoints.push([v.last_position.latitude, v.last_position.longitude]));
+//     this.ports.forEach(p => allPoints.push([p.latitude, p.longitude]));
+//     this.lighthouses.forEach(l => allPoints.push([l.latitude, l.longitude]));
+
+//     if (allPoints.length > 0) {
+//       const bounds = L.latLngBounds(allPoints);
+//       this.map.fitBounds(bounds);
+//     }
+//   }
+
+//   getRandomVesselIconUrl(): string {
+//     const index = Math.floor(Math.random() * this.vesselIconUrls.length);
+//     return this.vesselIconUrls[index];
+//   }
+
+//   selectVessel(vessel: Vessel): void {
+//     this.clearSelection();
+//     this.selectedVessel = vessel;
+//   }
+
+//   selectPort(port: Port): void {
+//     this.clearSelection();
+//     this.selectedPort = port;
+//   }
+
+//   selectLighthouse(lighthouse: Lighthouse): void {
+//     this.clearSelection();
+//     this.selectedLighthouse = lighthouse;
+//   }
+
+//   clearSelection(): void {
+//     this.selectedVessel = null;
+//     this.selectedPort = null;
+//     this.selectedLighthouse = null;
+//   }
+
+//   toggleLayer(layer: string): void {
+//     switch (layer) {
+//       case 'vessels':
+//         this.showVessels = !this.showVessels;
+//         this.showVessels ? this.vesselMarkers.addTo(this.map) : this.vesselMarkers.removeFrom(this.map);
+//         break;
+//       case 'ports':
+//         this.showPorts = !this.showPorts;
+//         this.showPorts ? this.portMarkers.addTo(this.map) : this.portMarkers.removeFrom(this.map);
+//         break;
+//       case 'lighthouses':
+//         this.showLighthouses = !this.showLighthouses;
+//         this.showLighthouses ? this.lighthouseMarkers.addTo(this.map) : this.lighthouseMarkers.removeFrom(this.map);
+//         break;
+//     }
+//   }
+
+//   getVesselStatus(status: string): string {
+//     const statusMap: { [key: string]: string } = {
+//       '0': 'Under way using engine',
+//       '1': 'At anchor',
+//       '2': 'Not under command',
+//       '3': 'Restricted maneuverability',
+//       '4': 'Constrained by her draught',
+//       '5': 'Moored',
+//       '6': 'Aground',
+//       '7': 'Engaged in fishing',
+//       '8': 'Under way sailing',
+//       '9': 'Reserved for future use',
+//       '10': 'Reserved for future use',
+//       '11': 'Towing astern',
+//       '12': 'Pushing ahead/towing alongside',
+//       '13': 'Reserved',
+//       '14': 'AIS-SART',
+//       '15': 'Not defined'
+//     };
+
+//     return statusMap[status] || 'Unknown';
+//   }
+
+//   formatDate(timestamp: string): string {
+//     return new Date(timestamp).toLocaleString();
+//   }
+// }
+
+
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import * as L from 'leaflet';
@@ -8,6 +279,7 @@ import { Vessel } from '../../models/vessel.model';
 import { Port } from '../../models/port.model';
 import { Lighthouse } from '../../models/lighthouse.model';
 import { forkJoin } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-map',
@@ -34,7 +306,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   showPorts = true;
   showLighthouses = true;
 
-  // Just the URLs — we’ll use them in divIcon directly
+  // Just the URLs — we'll use them in divIcon directly
   vesselIconUrls = [
     'assets/vessel-icon-red.png',
     'assets/vessel-icon-blue.png',
@@ -43,8 +315,9 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   portIcon = L.icon({
     iconUrl: 'assets/port-icon.png',
-    iconSize: [24, 24],
-    iconAnchor: [12, 12]
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -14]
   });
 
   lighthouseIcon = L.icon({
@@ -56,7 +329,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   constructor(
     private vesselService: VesselService,
     private portService: PortService,
-    private lighthouseService: LighthouseService
+    private lighthouseService: LighthouseService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -65,6 +339,24 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMap();
+
+    // Check if we need to focus on a specific port
+    this.route.queryParams.subscribe(params => {
+      if (params['portId'] && params['lat'] && params['lng']) {
+        const portId = +params['portId'];
+        const lat = +params['lat'];
+        const lng = +params['lng'];
+        
+        setTimeout(() => {
+          this.map.setView([lat, lng], 10);
+          // Find and select the port
+          const port = this.ports.find(p => p.id === portId);
+          if (port) {
+            this.selectPort(port);
+          }
+        }, 1000); // Delay to ensure map is initialized
+      }
+    });
   }
 
   initMap(): void {
@@ -122,53 +414,38 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
 
-  // addPortsToMap(): void {
-  //   this.portMarkers.clearLayers();
-
-  //   this.ports.forEach(port => {
-  //     const marker = L.marker(
-  //       [port.latitude, port.longitude],
-  //       { icon: this.portIcon }
-  //     ).addTo(this.portMarkers);
-
-  //     marker.bindTooltip(port.name);
-  //     marker.on('click', () => this.selectPort(port));
-  //   });
-  // }
   addPortsToMap(): void {
-  this.portMarkers.clearLayers();
+    this.portMarkers.clearLayers();
 
-  // Use a more visible port icon
-  const portIcon = L.icon({
-    iconUrl: 'assets/port-icon.png',
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-    popupAnchor: [0, -14]
-  });
+    this.ports.forEach(port => {
+      // Skip if no coordinates are available
+      if (port.latitude === undefined || port.longitude === undefined) {
+        return;
+      }
 
-  this.ports.forEach(port => {
-    // Create marker
-    const marker = L.marker(
-      [port.latitude, port.longitude],
-      { icon: portIcon }
-    ).addTo(this.portMarkers);
+      const marker = L.marker(
+        [port.latitude, port.longitude],
+        { icon: this.portIcon }
+      ).addTo(this.portMarkers);
 
-    // Add tooltip with port name
-    marker.bindTooltip(port.name);
-    
-    // Add a popup with basic info
-    marker.bindPopup(`
-      <div class="popup-content">
-        <h3>${port.name}</h3>
-        <p><strong>Country:</strong> ${port.country}</p>
-        <p><strong>UN/LOCODE:</strong> ${port.un_locode || 'N/A'}</p>
-      </div>
-    `);
-    
-    // Handle click event
-    marker.on('click', () => this.selectPort(port));
-  });
-}
+      // Add tooltip with port name
+      marker.bindTooltip(port.Port_Name);
+      
+      // Add a popup with basic info
+      marker.bindPopup(`
+        <div class="popup-content">
+          <h3>${port.Port_Name}</h3>
+          <p><strong>Country:</strong> ${port.Country}</p>
+          <p><strong>UN/LOCODE:</strong> ${port.UN_Code}</p>
+          <p><strong>Vessels in Port:</strong> ${port.Vessels_in_Port}</p>
+          <p><strong>Type:</strong> ${port.Type}</p>
+        </div>
+      `);
+      
+      // Handle click event
+      marker.on('click', () => this.selectPort(port));
+    });
+  }
 
   addLighthousesToMap(): void {
     this.lighthouseMarkers.clearLayers();
@@ -188,7 +465,14 @@ export class MapComponent implements OnInit, AfterViewInit {
     const allPoints: L.LatLngExpression[] = [];
 
     this.vessels.forEach(v => allPoints.push([v.last_position.latitude, v.last_position.longitude]));
-    this.ports.forEach(p => allPoints.push([p.latitude, p.longitude]));
+    
+    // Only add ports that have coordinates
+    this.ports.forEach(p => {
+      if (p.latitude !== undefined && p.longitude !== undefined) {
+        allPoints.push([p.latitude, p.longitude]);
+      }
+    });
+    
     this.lighthouses.forEach(l => allPoints.push([l.latitude, l.longitude]));
 
     if (allPoints.length > 0) {

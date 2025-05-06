@@ -1,4 +1,4 @@
-
+<!-- 
 <div class="port-list-container">
     <div class="header">
       <h1>Port List</h1>
@@ -69,6 +69,110 @@
           </tr>
           <tr *ngIf="filteredPorts.length === 0">
             <td colspan="7" class="no-data">No ports found matching your search criteria.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div> -->
+
+  <div class="port-list-container">
+    <div class="header">
+      <h1>Port List</h1>
+      <div class="search-filter">
+        <input 
+          type="text" 
+          placeholder="Search ports..." 
+          [(ngModel)]="searchTerm"
+          (input)="applyFilters()"
+        >
+      </div>
+    </div>
+  
+    <div class="table-container">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th (click)="sort('Port_Name')">
+              Port Name
+              <span *ngIf="sortColumn === 'Port_Name'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('Country')">
+              Country
+              <span *ngIf="sortColumn === 'Country'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('UN_Code')">
+              UN Code
+              <span *ngIf="sortColumn === 'UN_Code'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('Vessels_in_Port')">
+              Vessels in Port
+              <span *ngIf="sortColumn === 'Vessels_in_Port'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('Departures_Last_24_Hours')">
+              Departures (24h)
+              <span *ngIf="sortColumn === 'Departures_Last_24_Hours'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('Arrivals_Last_24_Hours')">
+              Arrivals (24h)
+              <span *ngIf="sortColumn === 'Arrivals_Last_24_Hours'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('Expected_Arrivals')">
+              Expected Arrivals
+              <span *ngIf="sortColumn === 'Expected_Arrivals'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('Type')">
+              Type
+              <span *ngIf="sortColumn === 'Type'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('Area_Local')">
+              Area Local
+              <span *ngIf="sortColumn === 'Area_Local'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th (click)="sort('Area_Global')">
+              Area Global
+              <span *ngIf="sortColumn === 'Area_Global'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let port of filteredPorts">
+            <td>{{ port.Port_Name }}</td>
+            <td>{{ port.Country }}</td>
+            <td>{{ port.UN_Code }}</td>
+            <td>{{ port.Vessels_in_Port }}</td>
+            <td>{{ port.Departures_Last_24_Hours }}</td>
+            <td>{{ port.Arrivals_Last_24_Hours }}</td>
+            <td>{{ port.Expected_Arrivals }}</td>
+            <td>{{ port.Type }}</td>
+            <td>{{ port.Area_Local }}</td>
+            <td>{{ port.Area_Global }}</td>
+            <td class="actions">
+              <button class="view-btn" (click)="viewOnMap(port)">View on Map</button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredPorts.length === 0">
+            <td colspan="11" class="no-data">No ports found matching your search criteria.</td>
           </tr>
         </tbody>
       </table>
