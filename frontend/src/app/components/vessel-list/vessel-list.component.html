@@ -33,12 +33,12 @@
                   {{ sortDirection === 'asc' ? '↑' : '↓' }}
                 </span>
               </th>
-              <th (click)="sort('flag')">
+              <!-- <th (click)="sort('flag')">
                 Flag
                 <span *ngIf="sortColumn === 'flag'" class="sort-indicator">
                   {{ sortDirection === 'asc' ? '↑' : '↓' }}
                 </span>
-              </th>
+              </th> -->
               <th (click)="sort('length')">
                 Length (m)
                 <span *ngIf="sortColumn === 'length'" class="sort-indicator">
@@ -71,7 +71,7 @@
               <td>{{ vessel.name }}</td>
               <td>{{ vessel.mmsi }}</td>
               <td>{{ vessel.vessel_type }}</td>
-              <td>{{ vessel.flag || 'Unknown' }}</td>
+              <!-- <td>{{ vessel.flag || 'Unknown' }}</td> -->
               <td>{{ vessel.length }}</td>
               <td>{{ vessel.width }}</td>
               <td>{{ getVesselStatus(vessel.last_position.status) }}</td>

@@ -29,6 +29,6 @@ export interface Port {
   name?: string;
   country?: string;
   un_locode?: string;
-  size?: string;
+  area_local?: string;
   image_url?: string;
 }

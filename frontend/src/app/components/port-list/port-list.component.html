@@ -152,7 +152,7 @@
                 {{ sortDirection === 'asc' ? '↑' : '↓' }}
               </span>
             </th>
-            <th>Actions</th>
+            <!-- <th>Actions</th> -->
           </tr>
         </thead>
         <tbody>
@@ -167,9 +167,9 @@
             <td>{{ port.Type }}</td>
             <td>{{ port.Area_Local }}</td>
             <td>{{ port.Area_Global }}</td>
-            <td class="actions">
+            <!-- <td class="actions">
               <button class="view-btn" (click)="viewOnMap(port)">View on Map</button>
-            </td>
+            </td> -->
           </tr>
           <tr *ngIf="filteredPorts.length === 0">
             <td colspan="11" class="no-data">No ports found matching your search criteria.</td>
