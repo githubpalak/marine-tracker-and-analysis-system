@@ -51,12 +51,12 @@
                   {{ sortDirection === 'asc' ? '↑' : '↓' }}
                 </span>
               </th>
-              <th (click)="sort('last_position.status')">
+              <!-- <th (click)="sort('last_position.status')">
                 Status
                 <span *ngIf="sortColumn === 'last_position.status'" class="sort-indicator">
                   {{ sortDirection === 'asc' ? '↑' : '↓' }}
                 </span>
-              </th>
+              </th> -->
               <th (click)="sort('last_position.speed')">
                 Speed (knots)
                 <span *ngIf="sortColumn === 'last_position.speed'" class="sort-indicator">
@@ -74,7 +74,7 @@
               <!-- <td>{{ vessel.flag || 'Unknown' }}</td> -->
               <td>{{ vessel.length }}</td>
               <td>{{ vessel.width }}</td>
-              <td>{{ getVesselStatus(vessel.last_position.status) }}</td>
+              <!-- <td>{{ getVesselStatus(vessel.last_position.status) }}</td> -->
               <td>{{ vessel.last_position.speed }}</td>
               <td class="actions">
                 <button class="view-btn" (click)="viewOnMap(vessel)">View on Map</button>

@@ -89,14 +89,15 @@
     </div>
   
     <div class="table-container">
-      <div *ngIf="loading" class="loading-overlay">
-        <div class="spinner"></div>
-        <p>Loading lighthouses...</p>
-      </div>
-  
       <table class="data-table">
         <thead>
           <tr>
+            <th (click)="sort('id')">
+              ID
+              <span *ngIf="sortColumn === 'id'" class="sort-indicator">
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+              </span>
+            </th>
             <th (click)="sort('name')">
               Name
               <span *ngIf="sortColumn === 'name'" class="sort-indicator">
@@ -116,11 +117,12 @@
               </span>
             </th>
             <th>Website</th>
-            <th>Actions</th>
+            <!-- <th>Actions</th> -->
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let lighthouse of filteredLighthouses">
+            <td>{{ lighthouse.id }}</td>
             <td>{{ lighthouse.name }}</td>
             <td>{{ lighthouse.latitude.toFixed(5) }}</td>
             <td>{{ lighthouse.longitude.toFixed(5) }}</td>
@@ -130,12 +132,12 @@
               </a>
               <span *ngIf="!lighthouse.website">N/A</span>
             </td>
-            <td class="actions">
+            <!-- <td class="actions">
               <button class="view-btn" (click)="viewOnMap(lighthouse)">View on Map</button>
-            </td>
+            </td> -->
           </tr>
-          <tr *ngIf="filteredLighthouses.length === 0 && !loading">
-            <td colspan="5" class="no-data">No lighthouses found matching your search criteria.</td>
+          <tr *ngIf="filteredLighthouses.length === 0">
+            <td colspan="6" class="no-data">No lighthouses found matching your search criteria.</td>
           </tr>
         </tbody>
       </table>

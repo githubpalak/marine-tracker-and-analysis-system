@@ -98,7 +98,6 @@
 //   }
 // }
 
-// lighthouse-list.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -117,7 +116,7 @@ export class LighthouseListComponent implements OnInit {
   lighthouses: Lighthouse[] = [];
   filteredLighthouses: Lighthouse[] = [];
   searchTerm: string = '';
-  sortColumn: string = 'name';
+  sortColumn: string = 'id';
   sortDirection: 'asc' | 'desc' = 'asc';
   
   // Pagination variables
@@ -125,7 +124,6 @@ export class LighthouseListComponent implements OnInit {
   pageSize: number = 10;
   totalItems: number = 0;
   totalPages: number = 0;
-  loading: boolean = false;
 
   constructor(
     private lighthouseService: LighthouseService,
@@ -137,7 +135,6 @@ export class LighthouseListComponent implements OnInit {
   }
 
   loadLighthouses(): void {
-    this.loading = true;
     this.lighthouseService.getLighthouses(this.currentPage).subscribe({
       next: (response) => {
         this.lighthouses = response.results;
@@ -145,11 +142,9 @@ export class LighthouseListComponent implements OnInit {
         this.totalItems = response.count;
         this.totalPages = Math.ceil(this.totalItems / this.pageSize);
         this.sort(this.sortColumn);
-        this.loading = false;
       },
       error: (error) => {
         console.error('Error fetching lighthouses:', error);
-        this.loading = false;
       }
     });
   }
@@ -161,26 +156,23 @@ export class LighthouseListComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
     this.lighthouseService.searchLighthouses(this.searchTerm).subscribe({
       next: (lighthouses) => {
         this.filteredLighthouses = lighthouses;
         this.sort(this.sortColumn);
-        this.loading = false;
       },
       error: (error) => {
         console.error('Error searching lighthouses:', error);
-        this.loading = false;
       }
     });
   }
 
   applyFilters(): void {
-    // Debounce implementation
+    // Improve search performance by increasing debounce time
     clearTimeout(this.searchTimeout);
     this.searchTimeout = setTimeout(() => {
       this.search();
-    }, 300);
+    }, 500); // Increased from 300ms to 500ms for better performance
   }
 
   private searchTimeout: any;
