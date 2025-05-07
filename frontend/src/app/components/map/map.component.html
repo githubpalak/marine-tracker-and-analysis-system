@@ -10,7 +10,7 @@
   <div *ngIf="selectedVessel" class="details-panel vessel-details">
     <div class="details-header">
       <h3>{{ selectedVessel.name }}</h3>
-      <button class="close-btn" (click)="clearSelection()" aria-label="Close">×</button>
+      <button class="close-btn" (click)="clearSelection(true)" aria-label="Close">×</button>
     </div>
     <div class="details-content">
       <div *ngIf="selectedVessel.image_url" class="details-image">
@@ -47,11 +47,10 @@
     </div>
   </div>
 
-  <!-- Optional Map Controls section can be uncommented when needed -->
-  <!-- 
-  <div class="map-controls">
+  <!-- Map Controls section - now enabled for better user experience -->
+  <!-- <div class="map-controls">
     <div class="layer-control">
-      <h4>Map Layers</h4>
+      <h4>Map Controls</h4>
       <div class="layer-option">
         <input
           type="checkbox"
@@ -59,9 +58,11 @@
           [checked]="showVessels"
           (change)="toggleLayer('vessels')"
         />
-        <label for="vessels-layer">Vessels</label>
+        <label for="vessels-layer">Show Vessels</label>
+      </div>
+      <div class="map-action">
+        <button class="map-btn" (click)="centerMapOnData()">Reset View</button>
       </div>
     </div>
-  </div>
-  -->
+  </div> -->
 </div>

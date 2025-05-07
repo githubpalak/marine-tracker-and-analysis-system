@@ -1,104 +1,10 @@
-
-// .map-container {
-//     position: relative;
-//     height: calc(100vh - 40px);
-//     width: 100%;
-//   }
-  
-//   .map {
-//     height: 100%;
-//     width: 100%;
-//   }
-  
-//   .details-panel {
-//     position: absolute;
-//     top: 20px;
-//     right: 20px;
-//     width: 350px;
-//     background-color: white;
-//     border-radius: 8px;
-//     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-//     z-index: 1000;
-//   }
-  
-//   .details-header {
-//     display: flex;
-//     justify-content: space-between;
-//     align-items: center;
-//     padding: 10px 15px;
-//     border-bottom: 1px solid #eee;
-//   }
-  
-//   .details-header h3 {
-//     margin: 0;
-//     font-size: 1.2rem;
-//   }
-  
-//   .close-btn {
-//     background: none;
-//     border: none;
-//     font-size: 1.5rem;
-//     cursor: pointer;
-//     color: #666;
-//   }
-  
-//   .details-content {
-//     padding: 15px;
-//   }
-  
-//   .details-image {
-//     margin-bottom: 15px;
-//   }
-  
-//   .details-image img {
-//     width: 100%;
-//     border-radius: 4px;
-//   }
-  
-//   .details-info p {
-//     margin: 8px 0;
-//     font-size: 0.9rem;
-//   }
-  
-//   .map-controls {
-//     position: absolute;
-//     bottom: 20px;
-//     left: 20px;
-//     background-color: white;
-//     border-radius: 8px;
-//     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-//     z-index: 1000;
-//     padding: 10px 15px;
-//   }
-  
-//   .layer-control h4 {
-//     margin: 0 0 10px 0;
-//     font-size: 1rem;
-//   }
-  
-//   .layer-option {
-//     margin-bottom: 5px;
-//   }
-  
-//   .vessel-details {
-//     border-top: 4px solid #2196F3;
-//   }
-  
-//   .port-details {
-//     border-top: 4px solid #4CAF50;
-//   }
-  
-//   .lighthouse-details {
-//     border-top: 4px solid #FF9800;
-//   }
-
-
 /* Premium Maritime System Map Styling */
 .map-container {
   position: relative;
-  height: calc(100vh - 40px);
+  height: calc(100vh - 25px); /* Adjusted to ensure it stays within screen boundaries */
   width: 100%;
   font-family: 'Roboto', 'Segoe UI', sans-serif;
+  overflow: hidden; /* Prevents any potential overflow */
 }
 
 .map {
@@ -113,6 +19,7 @@
   top: 20px;
   right: 20px;
   width: 350px;
+  max-height: calc(100vh - 120px); /* Ensure it stays within viewport */
   background-color: rgba(255, 255, 255, 0.96);
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
@@ -146,6 +53,9 @@
   padding: 16px 20px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
   background: linear-gradient(to right, #f8f9fa, #ffffff);
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .details-header h3 {
@@ -154,6 +64,10 @@
   font-weight: 600;
   color: #1a3353;
   letter-spacing: -0.01em;
+  max-width: 280px; /* Prevent long names from overflow */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .close-btn {
@@ -178,6 +92,8 @@
 
 .details-content {
   padding: 20px;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
 }
 
 .details-image {
@@ -259,6 +175,33 @@
   cursor: pointer;
 }
 
+/* Reset View Button */
+.map-action {
+  margin-top: 10px;
+}
+
+.map-btn {
+  background-color: #1e5796;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.map-btn:hover {
+  background-color: #164a8a;
+  transform: translateY(-1px);
+}
+
+.map-btn:active {
+  transform: translateY(1px);
+}
+
 /* Vessel Type Styling */
 .vessel-details {
   border-top: 4px solid #1e88e5;
@@ -303,7 +246,7 @@
   font-size: 11px !important;
 }
 
-/* Tooltip customization */
+/* Enhanced Tooltip customization */
 :global(.leaflet-tooltip) {
   background-color: rgba(255, 255, 255, 0.95) !important;
   border: none !important;
@@ -313,6 +256,14 @@
   font-size: 12px !important;
   font-weight: 500 !important;
   color: #1a3353 !important;
+}
+
+/* Enhanced vessel tooltip */
+:global(.vessel-tooltip strong) {
+  color: #1e5796;
+  display: block;
+  margin-bottom: 2px;
+  font-size: 13px;
 }
 
 /* Vessel icon customization */
@@ -362,8 +313,6 @@
 
 /* Custom scroll bar for details */
 .details-content {
-  max-height: 500px;
-  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #c1d1e3 #f1f5f9;
 }
@@ -413,5 +362,13 @@
   
   .details-header {
     padding-top: 18px;
+  }
+  
+  .map-controls {
+    bottom: calc(60vh + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 300px;
   }
 }
