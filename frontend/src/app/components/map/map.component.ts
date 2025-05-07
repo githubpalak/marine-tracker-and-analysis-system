@@ -274,6 +274,7 @@ import { VesselService } from '../../services/vessel.service';
 import { Vessel } from '../../models/vessel.model';
 import { forkJoin, Subscription, timer } from 'rxjs';
 import { AreaCoordinatesService } from '../../shared/area-coordinates.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-map',
@@ -295,6 +296,16 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   private originalMapBounds: L.LatLngBounds | null = null;
   
   // Custom vessel icons with improved styling
+  // vesselIconUrls = [
+  //   'assets/vessel-icon-red.png',
+  //   'assets/vessel-icon-blue.png',
+  //   'assets/vessel-icon-green.png'
+  // ];
+
+  // private subscriptions: Subscription = new Subscription();
+  // private refreshInterval = 60000; // 60 seconds
+
+  // Custom vessel icons with improved styling
   vesselIconUrls = [
     'assets/vessel-icon-red.png',
     'assets/vessel-icon-blue.png',
@@ -303,13 +314,39 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
   private refreshInterval = 60000; // 60 seconds
+  private pendingVesselFocus: string | null = null; // Store pending vessel MMSI to focus on
 
+  // constructor(
+  //   private vesselService: VesselService,
+  //   private areaCoordService: AreaCoordinatesService
+  // ) {}
   constructor(
     private vesselService: VesselService,
-    private areaCoordService: AreaCoordinatesService
+    private areaCoordService: AreaCoordinatesService,
+    private route: ActivatedRoute
   ) {}
 
+  // ngOnInit(): void {
+  //   this.loadData();
+    
+  //   // Set up periodic data refresh
+  //   const timerSub = timer(this.refreshInterval, this.refreshInterval).subscribe(() => {
+  //     this.refreshData();
+  //   });
+    
+  //   this.subscriptions.add(timerSub);
+  // }
   ngOnInit(): void {
+    // Check for route parameters first
+    this.route.queryParams.subscribe(params => {
+      if (params['mmsi'] && params['focus'] === 'true') {
+        console.log('Received request to focus on vessel with MMSI:', params['mmsi']);
+        // Store the MMSI to focus on after data is loaded
+        this.pendingVesselFocus = params['mmsi'];
+      }
+    });
+    
+    // Load vessel data
     this.loadData();
     
     // Set up periodic data refresh
@@ -364,6 +401,24 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  // loadData(): void {
+  //   this.isLoading = true;
+    
+  //   forkJoin({
+  //     vessels: this.vesselService.getVessels()
+  //   }).subscribe({
+  //     next: data => {
+  //       this.vessels = data.vessels;
+  //       this.addVesselsToMap();
+  //       this.centerMapOnData();
+  //       this.isLoading = false;
+  //     },
+  //     error: err => {
+  //       console.error('Error loading data:', err);
+  //       this.isLoading = false;
+  //     }
+  //   });
+  // }
   loadData(): void {
     this.isLoading = true;
     
@@ -375,23 +430,65 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this.addVesselsToMap();
         this.centerMapOnData();
         this.isLoading = false;
+        
+        // Check if we need to focus on a specific vessel
+        if (this.pendingVesselFocus) {
+          console.log('Looking for vessel with MMSI:', this.pendingVesselFocus);
+          const vesselToFocus = this.vessels.find(v => v.mmsi === this.pendingVesselFocus);
+          if (vesselToFocus) {
+            console.log('Found vessel to focus:', vesselToFocus.name);
+            // Small delay to ensure map is fully loaded
+            setTimeout(() => {
+              this.selectVessel(vesselToFocus);
+            }, 500);
+          } else {
+            console.log('Vessel with MMSI', this.pendingVesselFocus, 'not found');
+          }
+          // Clear the pending focus request
+          this.pendingVesselFocus = null;
+        }
       },
       error: err => {
         console.error('Error loading data:', err);
         this.isLoading = false;
+        this.pendingVesselFocus = null; // Clear on error too
       }
     });
   }
 
+  // refreshData(): void {
+  //   // Silent refresh without showing loading indicator
+  //   this.vesselService.getVessels().subscribe({
+  //     next: vessels => {
+  //       this.vessels = vessels;
+  //       this.addVesselsToMap();
+  //     },
+  //     error: err => {
+  //       console.error('Error refreshing vessel data:', err);
+  //     }
+  //   });
+  // }
   refreshData(): void {
     // Silent refresh without showing loading indicator
     this.vesselService.getVessels().subscribe({
       next: vessels => {
         this.vessels = vessels;
         this.addVesselsToMap();
+        
+        // Check if we need to focus on a specific vessel (in case it wasn't available initially)
+        if (this.pendingVesselFocus) {
+          const vesselToFocus = this.vessels.find(v => v.mmsi === this.pendingVesselFocus);
+          if (vesselToFocus) {
+            setTimeout(() => {
+              this.selectVessel(vesselToFocus);
+            }, 500);
+            this.pendingVesselFocus = null;
+          }
+        }
       },
       error: err => {
         console.error('Error refreshing vessel data:', err);
+        this.pendingVesselFocus = null; // Clear on error
       }
     });
   }

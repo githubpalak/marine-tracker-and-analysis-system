@@ -99,13 +99,23 @@ export class VesselListComponent implements OnInit {
     });
   }
 
+  // viewOnMap(vessel: Vessel): void {
+  //   // Navigate to map view and focus on this vessel
+  //   this.router.navigate(['/map'], { 
+  //     queryParams: { 
+  //       vesselId: vessel.id,
+  //       lat: vessel.last_position.latitude,
+  //       lng: vessel.last_position.longitude
+  //     } 
+  //   });
+  // }
   viewOnMap(vessel: Vessel): void {
     // Navigate to map view and focus on this vessel
+    // We'll use MMSI as it's a unique identifier for vessels
     this.router.navigate(['/map'], { 
       queryParams: { 
-        vesselId: vessel.id,
-        lat: vessel.last_position.latitude,
-        lng: vessel.last_position.longitude
+        mmsi: vessel.mmsi,
+        focus: 'true'
       } 
     });
   }
