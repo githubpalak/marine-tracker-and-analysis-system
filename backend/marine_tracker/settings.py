@@ -149,13 +149,10 @@ CORS_ALLOWED_ORIGINS = [
 
 # Rest Framework settings
 REST_FRAMEWORK = {
+#   'DEFAULT_PAGINATION_CLASS': None,  
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 500,
+    'PAGE_SIZE': 50,
 }
-# REST_FRAMEWORK = {
-#     'DEFAULT_PAGINATION_CLASS': None,  # Disables pagination globally
-#     'PAGE_SIZE': 1000,  # Optional, can be used to specify the page size if pagination is ever re-enabled
-# }
 
 # Global Fishing Watch API token
 GFW_API_TOKEN = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImtpZEtleSJ9.eyJkYXRhIjp7Im5hbWUiOiJQYWxhayBDaGFuZGFrIiwidXNlcklkIjo0NDY3OCwiYXBwbGljYXRpb25OYW1lIjoiUGFsYWsgQ2hhbmRhayIsImlkIjoyNTM1LCJ0eXBlIjoidXNlci1hcHBsaWNhdGlvbiJ9LCJpYXQiOjE3NDQyNzExOTQsImV4cCI6MjA1OTYzMTE5NCwiYXVkIjoiZ2Z3IiwiaXNzIjoiZ2Z3In0.QeAW4548ONN-uMGsxBArxxC7zB-oA7XzvOsC2GWbHTyDzO8ICv_-B3wdqOSAV67BsmIUx8jmV0-RUg9Z2ZgTsGmnP5Nz4kzo5RcsmT8WzUB5pkjlrpQRpr6MdERrWHjKHxnT2LJbwGPxdnN5VgGGlYXw92DfdONfnb9Fdx54SFcvtxppGcO3h30KHr9Ct_NeliFBIzxXanYiUmF_UcA3ghDZ2MwzBQD96cT_7N9qu3Jv2hNjkOm_OWA5EdDWixd5NmDN9MLiDHt5JcZCC-3iCRMHd1j9TBhpz5A_GwW1Z3RlLP0haBqFiV0gvlztYM2iGu8bvJpvDoPK9goFwN187PrajSga7UsgtPITdZc18r5XsI_gpzJr1alv5keq02OJMJWsct3h88qXmgdNIaVD9K_XCZ3WBcb8BeGINpyiU5YKA2g2P9SDPKhNVoIR1M5EyTi85IqsI7jJPPDr3BgD0X0U_ipANtVIyxgLFvhYhmJ4fGoad19tkRDb34UuemHu"

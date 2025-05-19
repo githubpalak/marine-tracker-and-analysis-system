@@ -46,9 +46,41 @@
       </div>
     </div>
   </div>
+  
+  <!-- Lighthouse Details Panel -->
+  <div *ngIf="selectedLighthouse" class="details-panel lighthouse-details">
+    <div class="details-header">
+      <h3>{{ selectedLighthouse.name }}</h3>
+      <button class="close-btn" (click)="clearSelection(true)" aria-label="Close">×</button>
+    </div>
+    <div class="details-content">
+      <div *ngIf="selectedLighthouse.image_url" class="details-image">
+        <img [src]="selectedLighthouse.image_url" alt="{{ selectedLighthouse.name }}" />
+      </div>
+      <div class="details-info">
+        <p><strong>ID:</strong> {{ selectedLighthouse.id }}</p>
+        <p>
+          <strong>Position:</strong>
+          {{ selectedLighthouse.latitude.toFixed(5) }},
+          {{ selectedLighthouse.longitude.toFixed(5) }}
+        </p>
+        <p *ngIf="selectedLighthouse.country"><strong>Country:</strong> {{ selectedLighthouse.country }}</p>
+        <p *ngIf="selectedLighthouse.height !== undefined && selectedLighthouse.height !== null">
+          <strong>Height:</strong> {{ selectedLighthouse.height }} m
+        </p>
+        <p *ngIf="selectedLighthouse.year_built !== undefined && selectedLighthouse.year_built !== null">
+          <strong>Year Built:</strong> {{ selectedLighthouse.year_built }}
+        </p>
+        <p *ngIf="selectedLighthouse.website">
+          <strong>Website:</strong> 
+          <a [href]="selectedLighthouse.website" target="_blank" rel="noopener noreferrer">Visit Website</a>
+        </p>
+      </div>
+    </div>
+  </div>
 
   <!-- Map Controls section - now enabled for better user experience -->
-  <!-- <div class="map-controls">
+  <div class="map-controls">
     <div class="layer-control">
       <h4>Map Controls</h4>
       <div class="layer-option">
@@ -60,9 +92,18 @@
         />
         <label for="vessels-layer">Show Vessels</label>
       </div>
+      <div class="layer-option">
+        <input
+          type="checkbox"
+          id="lighthouses-layer"
+          [checked]="showLighthouses"
+          (change)="toggleLayer('lighthouses')"
+        />
+        <label for="lighthouses-layer">Show Lighthouses</label>
+      </div>
       <div class="map-action">
         <button class="map-btn" (click)="centerMapOnData()">Reset View</button>
       </div>
     </div>
-  </div> -->
+  </div>
 </div>
