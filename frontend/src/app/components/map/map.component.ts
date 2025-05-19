@@ -18,14 +18,14 @@
 //   map!: L.Map;
 //   vessels: Vessel[] = [];
 //   vesselMarkers = L.layerGroup();
-  
+
 //   selectedVessel: Vessel | null = null;
 //   showVessels = true;
 //   isLoading = true;
-  
+
 //   // Original map bounds to return to when clearing selection
 //   private originalMapBounds: L.LatLngBounds | null = null;
-  
+
 //   // Custom vessel icons with improved styling
 //   // vesselIconUrls = [
 //   //   'assets/vessel-icon-red.png',
@@ -59,12 +59,12 @@
 
 //   // ngOnInit(): void {
 //   //   this.loadData();
-    
+
 //   //   // Set up periodic data refresh
 //   //   const timerSub = timer(this.refreshInterval, this.refreshInterval).subscribe(() => {
 //   //     this.refreshData();
 //   //   });
-    
+
 //   //   this.subscriptions.add(timerSub);
 //   // }
 //   ngOnInit(): void {
@@ -76,15 +76,15 @@
 //         this.pendingVesselFocus = params['mmsi'];
 //       }
 //     });
-    
+
 //     // Load vessel data
 //     this.loadData();
-    
+
 //     // Set up periodic data refresh
 //     const timerSub = timer(this.refreshInterval, this.refreshInterval).subscribe(() => {
 //       this.refreshData();
 //     });
-    
+
 //     this.subscriptions.add(timerSub);
 //   }
 
@@ -119,14 +119,14 @@
 //     }).addTo(this.map);
 
 //     this.vesselMarkers.addTo(this.map);
-    
+
 //     // Add scale control with metric and imperial units
 //     L.control.scale({
 //       position: 'bottomright',
 //       imperial: true,
 //       metric: true
 //     }).addTo(this.map);
-    
+
 //     // Ensure map resizes properly when window size changes
 //     window.addEventListener('resize', () => {
 //       this.map.invalidateSize();
@@ -135,7 +135,7 @@
 
 //   // loadData(): void {
 //   //   this.isLoading = true;
-    
+
 //   //   forkJoin({
 //   //     vessels: this.vesselService.getVessels()
 //   //   }).subscribe({
@@ -153,7 +153,7 @@
 //   // }
 //   loadData(): void {
 //     this.isLoading = true;
-    
+
 //     forkJoin({
 //       vessels: this.vesselService.getVessels()
 //     }).subscribe({
@@ -162,7 +162,7 @@
 //         this.addVesselsToMap();
 //         this.centerMapOnData();
 //         this.isLoading = false;
-        
+
 //         // Check if we need to focus on a specific vessel
 //         if (this.pendingVesselFocus) {
 //           console.log('Looking for vessel with MMSI:', this.pendingVesselFocus);
@@ -206,7 +206,7 @@
 //       next: vessels => {
 //         this.vessels = vessels;
 //         this.addVesselsToMap();
-        
+
 //         // Check if we need to focus on a specific vessel (in case it wasn't available initially)
 //         if (this.pendingVesselFocus) {
 //           const vesselToFocus = this.vessels.find(v => v.mmsi === this.pendingVesselFocus);
@@ -231,7 +231,7 @@
 //     this.vessels.forEach(vessel => {
 //       const iconUrl = this.getVesselIconByType(vessel);
 //       const heading = vessel.last_position?.heading || 0;
-      
+
 //       // Enhanced vessel icon with shadow and better visibility
 //       const icon = L.divIcon({
 //         className: 'vessel-icon',
@@ -242,7 +242,7 @@
 
 //       const marker = L.marker(
 //         [vessel.last_position.latitude, vessel.last_position.longitude],
-//         { 
+//         {
 //           icon: icon,
 //           title: vessel.name,
 //           alt: `Vessel: ${vessel.name}`,
@@ -263,7 +263,7 @@
 //         offset: [0, -10],
 //         opacity: 0.9
 //       });
-      
+
 //       marker.on('click', () => this.selectVessel(vessel));
 //     });
 //   }
@@ -285,7 +285,7 @@
 //         animate: true,
 //         duration: 1
 //       });
-      
+
 //       // Store the original bounds to return to later
 //       this.originalMapBounds = bounds;
 //     }
@@ -296,9 +296,9 @@
 //     if (!vessel.vessel_type) {
 //       return this.getRandomVesselIconUrl();
 //     }
-    
+
 //     const type = vessel.vessel_type.toLowerCase();
-    
+
 //     if (type.includes('cargo') || type.includes('container')) {
 //       return this.vesselIconUrls[0]; // Red
 //     } else if (type.includes('passenger') || type.includes('cruise')) {
@@ -306,7 +306,7 @@
 //     } else if (type.includes('tanker') || type.includes('oil')) {
 //       return this.vesselIconUrls[2]; // Green
 //     }
-    
+
 //     return this.getRandomVesselIconUrl();
 //   }
 
@@ -318,7 +318,7 @@
 //   selectVessel(vessel: Vessel): void {
 //     this.clearSelection(false); // Clear selection without resetting map view
 //     this.selectedVessel = vessel;
-    
+
 //     // Center map on selected vessel with animation
 //     if (vessel.last_position) {
 //       this.map.flyTo(
@@ -334,7 +334,7 @@
 
 //   clearSelection(resetMapView: boolean = true): void {
 //     this.selectedVessel = null;
-    
+
 //     // Zoom back to original map view if requested and original bounds exist
 //     if (resetMapView && this.originalMapBounds) {
 //       this.map.flyToBounds(this.originalMapBounds, {
@@ -404,7 +404,7 @@ import { ActivatedRoute } from '@angular/router';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   map!: L.Map;
@@ -412,21 +412,21 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   lighthouses: Lighthouse[] = [];
   vesselMarkers = L.layerGroup();
   lighthouseMarkers = L.layerGroup();
-  
+
   selectedVessel: Vessel | null = null;
   selectedLighthouse: Lighthouse | null = null;
   showVessels = true;
   showLighthouses = true;
   isLoading = true;
-  
+
   // Original map bounds to return to when clearing selection
   private originalMapBounds: L.LatLngBounds | null = null;
-  
+
   // Custom vessel icons with improved styling
   vesselIconUrls = [
     'assets/vessel-icon-red.png',
     'assets/vessel-icon-blue.png',
-    'assets/vessel-icon-green.png'
+    'assets/vessel-icon-green.png',
   ];
 
   private subscriptions: Subscription = new Subscription();
@@ -443,28 +443,37 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     // Check for route parameters first
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       if (params['mmsi'] && params['focus'] === 'true') {
-        console.log('Received request to focus on vessel with MMSI:', params['mmsi']);
+        console.log(
+          'Received request to focus on vessel with MMSI:',
+          params['mmsi']
+        );
         // Store the MMSI to focus on after data is loaded
         this.pendingVesselFocus = params['mmsi'];
       }
-      
+
       // Check for lighthouse parameter
       if (params['lighthouseId']) {
-        console.log('Received request to focus on lighthouse with ID:', params['lighthouseId']);
+        console.log(
+          'Received request to focus on lighthouse with ID:',
+          params['lighthouseId']
+        );
         this.pendingLighthouseFocus = Number(params['lighthouseId']);
       }
     });
-    
+
     // Load vessel and lighthouse data
     this.loadData();
-    
+
     // Set up periodic data refresh
-    const timerSub = timer(this.refreshInterval, this.refreshInterval).subscribe(() => {
+    const timerSub = timer(
+      this.refreshInterval,
+      this.refreshInterval
+    ).subscribe(() => {
       this.refreshData();
     });
-    
+
     this.subscriptions.add(timerSub);
   }
 
@@ -486,28 +495,34 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       zoomAnimation: true,
       markerZoomAnimation: true,
       fadeAnimation: true,
-      maxBounds: [[-90, -180], [90, 180]], // Set map bounds to world limits
-      maxBoundsViscosity: 1.0 // Keep map within bounds
+      maxBounds: [
+        [-90, -180],
+        [90, 180],
+      ], // Set map bounds to world limits
+      maxBoundsViscosity: 1.0, // Keep map within bounds
     }).setView([0, 0], 3);
 
     // Premium map tiles with retina support
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       minZoom: 2,
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      className: 'premium-map-tiles'
+      attribution:
+        '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      className: 'premium-map-tiles',
     }).addTo(this.map);
 
     this.vesselMarkers.addTo(this.map);
     this.lighthouseMarkers.addTo(this.map);
-    
+
     // Add scale control with metric and imperial units
-    L.control.scale({
-      position: 'bottomright',
-      imperial: true,
-      metric: true
-    }).addTo(this.map);
-    
+    L.control
+      .scale({
+        position: 'bottomright',
+        imperial: true,
+        metric: true,
+      })
+      .addTo(this.map);
+
     // Ensure map resizes properly when window size changes
     window.addEventListener('resize', () => {
       this.map.invalidateSize();
@@ -516,23 +531,25 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loadData(): void {
     this.isLoading = true;
-    
+
     forkJoin({
       vessels: this.vesselService.getVessels(),
-      lighthouses: this.lighthouseService.getLighthouses(1)
+      lighthouses: this.lighthouseService.getLighthouses(1),
     }).subscribe({
-      next: data => {
+      next: (data) => {
         this.vessels = data.vessels;
         this.lighthouses = data.lighthouses.results;
         this.addVesselsToMap();
         this.addLighthousesToMap();
         this.centerMapOnData();
         this.isLoading = false;
-        
+
         // Check if we need to focus on a specific vessel
         if (this.pendingVesselFocus) {
           console.log('Looking for vessel with MMSI:', this.pendingVesselFocus);
-          const vesselToFocus = this.vessels.find(v => v.mmsi === this.pendingVesselFocus);
+          const vesselToFocus = this.vessels.find(
+            (v) => v.mmsi === this.pendingVesselFocus
+          );
           if (vesselToFocus) {
             console.log('Found vessel to focus:', vesselToFocus.name);
             // Small delay to ensure map is fully loaded
@@ -540,16 +557,25 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
               this.selectVessel(vesselToFocus);
             }, 500);
           } else {
-            console.log('Vessel with MMSI', this.pendingVesselFocus, 'not found');
+            console.log(
+              'Vessel with MMSI',
+              this.pendingVesselFocus,
+              'not found'
+            );
           }
           // Clear the pending focus request
           this.pendingVesselFocus = null;
         }
-        
+
         // Check if we need to focus on a specific lighthouse
         if (this.pendingLighthouseFocus) {
-          console.log('Looking for lighthouse with ID:', this.pendingLighthouseFocus);
-          const lighthouseToFocus = this.lighthouses.find(l => l.id === this.pendingLighthouseFocus);
+          console.log(
+            'Looking for lighthouse with ID:',
+            this.pendingLighthouseFocus
+          );
+          const lighthouseToFocus = this.lighthouses.find(
+            (l) => l.id === this.pendingLighthouseFocus
+          );
           if (lighthouseToFocus) {
             console.log('Found lighthouse to focus:', lighthouseToFocus.name);
             // Small delay to ensure map is fully loaded
@@ -557,18 +583,22 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
               this.selectLighthouse(lighthouseToFocus);
             }, 500);
           } else {
-            console.log('Lighthouse with ID', this.pendingLighthouseFocus, 'not found');
+            console.log(
+              'Lighthouse with ID',
+              this.pendingLighthouseFocus,
+              'not found'
+            );
           }
           // Clear the pending focus request
           this.pendingLighthouseFocus = null;
         }
       },
-      error: err => {
+      error: (err) => {
         console.error('Error loading data:', err);
         this.isLoading = false;
         this.pendingVesselFocus = null; // Clear on error too
         this.pendingLighthouseFocus = null; // Clear on error too
-      }
+      },
     });
   }
 
@@ -576,17 +606,19 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     // Silent refresh without showing loading indicator
     forkJoin({
       vessels: this.vesselService.getVessels(),
-      lighthouses: this.lighthouseService.getLighthouses(1)
+      lighthouses: this.lighthouseService.getLighthouses(1),
     }).subscribe({
-      next: data => {
+      next: (data) => {
         this.vessels = data.vessels;
         this.lighthouses = data.lighthouses.results;
         this.addVesselsToMap();
         this.addLighthousesToMap();
-        
+
         // Check if we need to focus on a specific vessel (in case it wasn't available initially)
         if (this.pendingVesselFocus) {
-          const vesselToFocus = this.vessels.find(v => v.mmsi === this.pendingVesselFocus);
+          const vesselToFocus = this.vessels.find(
+            (v) => v.mmsi === this.pendingVesselFocus
+          );
           if (vesselToFocus) {
             setTimeout(() => {
               this.selectVessel(vesselToFocus);
@@ -594,10 +626,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             this.pendingVesselFocus = null;
           }
         }
-        
+
         // Check if we need to focus on a specific lighthouse
         if (this.pendingLighthouseFocus) {
-          const lighthouseToFocus = this.lighthouses.find(l => l.id === this.pendingLighthouseFocus);
+          const lighthouseToFocus = this.lighthouses.find(
+            (l) => l.id === this.pendingLighthouseFocus
+          );
           if (lighthouseToFocus) {
             setTimeout(() => {
               this.selectLighthouse(lighthouseToFocus);
@@ -606,91 +640,99 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           }
         }
       },
-      error: err => {
+      error: (err) => {
         console.error('Error refreshing data:', err);
         this.pendingVesselFocus = null; // Clear on error
         this.pendingLighthouseFocus = null; // Clear on error
-      }
+      },
     });
   }
 
   addVesselsToMap(): void {
     this.vesselMarkers.clearLayers();
 
-    this.vessels.forEach(vessel => {
+    this.vessels.forEach((vessel) => {
       const iconUrl = this.getVesselIconByType(vessel);
       const heading = vessel.last_position?.heading || 0;
-      
+
       // Enhanced vessel icon with shadow and better visibility
       const icon = L.divIcon({
         className: 'vessel-icon',
         html: `<img src="${iconUrl}" style="transform: rotate(${heading}deg); width: 8px; height: 18px;" alt="Vessel" />`,
         iconSize: [8, 18],
-        iconAnchor: [4, 9]
+        iconAnchor: [4, 9],
       });
 
       const marker = L.marker(
         [vessel.last_position.latitude, vessel.last_position.longitude],
-        { 
+        {
           icon: icon,
           title: vessel.name,
           alt: `Vessel: ${vessel.name}`,
           riseOnHover: true,
-          riseOffset: 250
+          riseOffset: 250,
         }
       ).addTo(this.vesselMarkers);
 
       // Enhanced tooltip with more information
-      marker.bindTooltip(`
+      marker.bindTooltip(
+        `
         <div class="vessel-tooltip">
           <strong>${vessel.name}</strong><br>
           ${vessel.vessel_type || 'Unknown type'}<br>
           ${vessel.last_position.speed} knots
         </div>
-      `, {
-        direction: 'top',
-        offset: [0, -10],
-        opacity: 0.9
-      });
-      
+      `,
+        {
+          direction: 'top',
+          offset: [0, -10],
+          opacity: 0.9,
+        }
+      );
+
       marker.on('click', () => this.selectVessel(vessel));
     });
   }
-  
+
   addLighthousesToMap(): void {
     this.lighthouseMarkers.clearLayers();
-    
-    this.lighthouses.forEach(lighthouse => {
+
+    this.lighthouses.forEach((lighthouse) => {
       // Create a custom lighthouse icon
-      const icon = L.divIcon({
-        className: 'lighthouse-icon',
-        html: `<div style="background-color: #fb8c00; border: 2px solid #fff; border-radius: 50%; width: 10px; height: 10px; box-shadow: 0 0 8px #fb8c00;"></div>`,
-        iconSize: [10, 10],
-        iconAnchor: [5, 5]
+      // const icon = L.divIcon({
+      //   className: 'lighthouse-icon',
+      //   html: `<div style="background-color: #fb8c00; border: 2px solid #fff; border-radius: 50%; width: 10px; height: 10px; box-shadow: 0 0 8px #fb8c00;"></div>`,
+      //   iconSize: [10, 10],
+      //   iconAnchor: [5, 5]
+      // });
+      const icon = L.icon({
+        iconUrl: 'assets/lighthouse-icon.png',
+        iconSize: [30, 20], // adjust size as needed
+        iconAnchor: [12.5, 12.5], // center the icon (half of width/height)
       });
-      
-      const marker = L.marker(
-        [lighthouse.latitude, lighthouse.longitude],
-        {
-          icon: icon,
-          title: lighthouse.name,
-          alt: `Lighthouse: ${lighthouse.name}`,
-          riseOnHover: true,
-          riseOffset: 250
-        }
-      ).addTo(this.lighthouseMarkers);
-      
+
+      const marker = L.marker([lighthouse.latitude, lighthouse.longitude], {
+        icon: icon,
+        title: lighthouse.name,
+        alt: `Lighthouse: ${lighthouse.name}`,
+        riseOnHover: true,
+        riseOffset: 250,
+      }).addTo(this.lighthouseMarkers);
+
       // Bind tooltip with lighthouse name
-      marker.bindTooltip(`
+      marker.bindTooltip(
+        `
         <div class="lighthouse-tooltip">
           <strong>${lighthouse.name}</strong>
         </div>
-      `, {
-        direction: 'top',
-        offset: [0, -5],
-        opacity: 0.9
-      });
-      
+      `,
+        {
+          direction: 'top',
+          offset: [0, -5],
+          opacity: 0.9,
+        }
+      );
+
       marker.on('click', () => this.selectLighthouse(lighthouse));
     });
   }
@@ -698,13 +740,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   centerMapOnData(): void {
     const allPoints: L.LatLngExpression[] = [];
 
-    this.vessels.forEach(v => {
+    this.vessels.forEach((v) => {
       if (v.last_position.latitude && v.last_position.longitude) {
         allPoints.push([v.last_position.latitude, v.last_position.longitude]);
       }
     });
-    
-    this.lighthouses.forEach(l => {
+
+    this.lighthouses.forEach((l) => {
       if (l.latitude && l.longitude) {
         allPoints.push([l.latitude, l.longitude]);
       }
@@ -716,9 +758,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         padding: [50, 50],
         maxZoom: 10,
         animate: true,
-        duration: 1
+        duration: 1,
       });
-      
+
       // Store the original bounds to return to later
       this.originalMapBounds = bounds;
     }
@@ -729,9 +771,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!vessel.vessel_type) {
       return this.getRandomVesselIconUrl();
     }
-    
+
     const type = vessel.vessel_type.toLowerCase();
-    
+
     if (type.includes('cargo') || type.includes('container')) {
       return this.vesselIconUrls[0]; // Red
     } else if (type.includes('passenger') || type.includes('cruise')) {
@@ -739,7 +781,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     } else if (type.includes('tanker') || type.includes('oil')) {
       return this.vesselIconUrls[2]; // Green
     }
-    
+
     return this.getRandomVesselIconUrl();
   }
 
@@ -752,7 +794,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.clearSelection(false); // Clear selection without resetting map view
     this.selectedVessel = vessel;
     this.selectedLighthouse = null;
-    
+
     // Center map on selected vessel with animation
     if (vessel.last_position) {
       this.map.flyTo(
@@ -760,24 +802,24 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         Math.max(this.map.getZoom(), 9),
         {
           duration: 0.8,
-          easeLinearity: 0.5
+          easeLinearity: 0.5,
         }
       );
     }
   }
-  
+
   selectLighthouse(lighthouse: Lighthouse): void {
     this.clearSelection(false); // Clear selection without resetting map view
     this.selectedLighthouse = lighthouse;
     this.selectedVessel = null;
-    
+
     // Center map on selected lighthouse with animation
     this.map.flyTo(
       [lighthouse.latitude, lighthouse.longitude],
       Math.max(this.map.getZoom(), 12),
       {
         duration: 0.8,
-        easeLinearity: 0.5
+        easeLinearity: 0.5,
       }
     );
   }
@@ -785,14 +827,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   clearSelection(resetMapView: boolean = true): void {
     this.selectedVessel = null;
     this.selectedLighthouse = null;
-    
+
     // Zoom back to original map view if requested and original bounds exist
     if (resetMapView && this.originalMapBounds) {
       this.map.flyToBounds(this.originalMapBounds, {
         padding: [50, 50],
         maxZoom: 10,
         animate: true,
-        duration: 0.8
+        duration: 0.8,
       });
     }
   }
@@ -800,10 +842,14 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   toggleLayer(layer: string): void {
     if (layer === 'vessels') {
       this.showVessels = !this.showVessels;
-      this.showVessels ? this.vesselMarkers.addTo(this.map) : this.vesselMarkers.removeFrom(this.map);
+      this.showVessels
+        ? this.vesselMarkers.addTo(this.map)
+        : this.vesselMarkers.removeFrom(this.map);
     } else if (layer === 'lighthouses') {
       this.showLighthouses = !this.showLighthouses;
-      this.showLighthouses ? this.lighthouseMarkers.addTo(this.map) : this.lighthouseMarkers.removeFrom(this.map);
+      this.showLighthouses
+        ? this.lighthouseMarkers.addTo(this.map)
+        : this.lighthouseMarkers.removeFrom(this.map);
     }
   }
 
@@ -824,7 +870,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       '12': 'Pushing ahead/towing alongside',
       '13': 'Reserved',
       '14': 'AIS-SART',
-      '15': 'Not defined'
+      '15': 'Not defined',
     };
 
     return statusMap[status] || 'Unknown';
@@ -837,7 +883,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-      second: '2-digit'
+      second: '2-digit',
     });
   }
 }
