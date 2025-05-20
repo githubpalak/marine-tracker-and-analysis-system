@@ -315,11 +315,15 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       //   iconSize: [10, 10],
       //   iconAnchor: [5, 5]
       // });
-      const icon = L.icon({
-        iconUrl: 'assets/lighthouse-icon.png',
-        iconSize: [30, 20], // adjust size as needed
-        iconAnchor: [12.5, 12.5], // center the icon (half of width/height)
+      const icon = L.divIcon({
+        className: 'lighthouse-icon',
+        html: `<div style="width: 7px; height: 7px; border-radius: 100%; background-color: transparent; border: 1px solid rgba(1, 17, 63, 0.9);"></div>` ,
       });
+      // const icon = L.icon({
+      //   iconUrl: 'assets/lighthouse-icon.png',
+      //   iconSize: [30, 20], // adjust size as needed
+      //   iconAnchor: [12.5, 12.5], // center the icon (half of width/height)
+      // });
 
       const marker = L.marker([lighthouse.latitude, lighthouse.longitude], {
         icon: icon,

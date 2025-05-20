@@ -22,6 +22,7 @@
     "@angular/router": "^19.2.0",
     "chart.js": "^4.4.9",
     "leaflet": "^1.9.4",
+    "leaflet-polylinedecorator": "^1.6.0",
     "leaflet-rotatedmarker": "^0.2.0",
     "leaflet.markercluster": "^1.5.3",
     "ngx-leaflet": "^0.0.16",
