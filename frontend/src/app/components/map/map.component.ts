@@ -34,13 +34,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Custom vessel icons with improved styling
   vesselIconUrls = [
-    'assets/vessel-icon-blue.png',
-    'assets/vessel-icon-blue.png',
-    'assets/vessel-icon-blue.png',
+    'assets/vessel-wheel.png',
+    'assets/vessel-wheel.png',
+    'assets/vessel-wheel.png',
   ];
 
   private subscriptions: Subscription = new Subscription();
-  private refreshInterval = 500; // 5 seconds
+  private refreshInterval = 20000; // 5 seconds
   private pendingVesselFocus: string | null = null; // Store pending vessel MMSI to focus on
   private pendingLighthouseFocus: number | null = null; // Store pending lighthouse ID to focus on
 
@@ -49,7 +49,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     private lighthouseService: LighthouseService,
     private areaCoordService: AreaCoordinatesService,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     // Check for route parameters first
@@ -268,8 +268,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       // Enhanced vessel icon with shadow and better visibility
       const icon = L.divIcon({
         className: 'vessel-icon',
-        html: `<img src="${iconUrl}" style="transform: rotate(${heading}deg); width: 8px; height: 18px;" alt="Vessel" />`,
-        iconSize: [8, 18],
+        html: `<img src="${iconUrl}" style="transform: rotate(${heading}deg); width: 18px; height: 18px;" alt="Vessel" />`,
+        iconSize: [18, 18],
         iconAnchor: [4, 9],
       });
 
@@ -317,7 +317,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       // });
       const icon = L.divIcon({
         className: 'lighthouse-icon',
-        html: `<div style="width: 7px; height: 7px; border-radius: 100%; background-color: transparent; border: 1px solid rgba(1, 17, 63, 0.9);"></div>` ,
+        html: `<div style="width: 12px; height: 12px; border-radius: 100%; background-color: transparent; border-width: 3px; border-style: dotted; border-color: rgb(0, 64, 255);"></div>`,
       });
       // const icon = L.icon({
       //   iconUrl: 'assets/lighthouse-icon.png',
@@ -381,19 +381,19 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   // }
 
   centerMapOnData(): void {
-  // Fixed center coordinates
-  const center: L.LatLngExpression = [15.5, 78.5];
-  const zoomLevel = 5.5;
+    // Fixed center coordinates
+    const center: L.LatLngExpression = [15.5, 78.5];
+    const zoomLevel = 5.5;
 
-  // Set the map view to the fixed center and zoom
-  this.map.setView(center, zoomLevel, {
-    animate: true,
-    duration: 1,
-  });
+    // Set the map view to the fixed center and zoom
+    this.map.setView(center, zoomLevel, {
+      animate: true,
+      duration: 1,
+    });
 
-  // Optional: you can reset originalMapBounds if needed
-  this.originalMapBounds = null; // or leave undefined
-}
+    // Optional: you can reset originalMapBounds if needed
+    this.originalMapBounds = null; // or leave undefined
+  }
 
 
   getVesselIconByType(vessel: Vessel): string {
@@ -459,13 +459,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedLighthouse = null;
 
     // Zoom back to original map view if requested and original bounds exist
-    if (resetMapView && this.originalMapBounds) {
-      this.map.flyToBounds(this.originalMapBounds, {
-        padding: [50, 50],
-        maxZoom: 10,
-        animate: true,
-        duration: 0.8,
-      });
+    // if (resetMapView && this.originalMapBounds) {
+    //   this.map.flyToBounds(this.originalMapBounds, {
+    //     padding: [50, 50],
+    //     maxZoom: 10,
+    //     animate: true,
+    //     duration: 0.8,
+    //   });
+    // }
+
+    if (resetMapView) {
+      this.centerMapOnData(); // Call your centering function
     }
   }
 
