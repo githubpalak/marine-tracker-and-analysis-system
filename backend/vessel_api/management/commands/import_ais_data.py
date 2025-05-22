@@ -82,7 +82,7 @@ class Command(BaseCommand):
             '--file',
             type=str,
             help='Path to AIS data JSON file',
-            default=os.path.join(settings.BASE_DIR, 'data', 'ais_data.json')
+            default=os.path.join(settings.BASE_DIR, 'data', 'ais_mini.json')
         )
         parser.add_argument(
             '--batch-size',
@@ -99,6 +99,7 @@ class Command(BaseCommand):
         try:
             with open(file_path, 'r', encoding='utf-8') as f:
                 ais_entries = json.load(f)
+            self.stdout.write(f'First AIS entry preview: {ais_entries[0]}')
         except Exception as e:
             self.stderr.write(self.style.ERROR(f'Failed to read JSON file: {e}'))
             return

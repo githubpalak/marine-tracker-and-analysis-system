@@ -33,3 +33,20 @@ class VesselPosition(models.Model):
     
     def __str__(self):
         return f"{self.vessel.name} @ ({self.latitude}, {self.longitude}) on {self.timestamp}"
+    
+
+class PositionOffset(models.Model):
+    name = models.CharField(max_length=100, default="position_offset")
+    value = models.FloatField(default=0.0)
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    @classmethod
+    def get_solo(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
