@@ -34,13 +34,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Custom vessel icons with improved styling
   vesselIconUrls = [
-    'assets/vessel-icon-red.png',
     'assets/vessel-icon-blue.png',
-    'assets/vessel-icon-green.png',
+    'assets/vessel-icon-blue.png',
+    'assets/vessel-icon-blue.png',
   ];
 
   private subscriptions: Subscription = new Subscription();
-  private refreshInterval = 60000; // 60 seconds
+  private refreshInterval = 500; // 5 seconds
   private pendingVesselFocus: string | null = null; // Store pending vessel MMSI to focus on
   private pendingLighthouseFocus: number | null = null; // Store pending lighthouse ID to focus on
 
@@ -110,12 +110,12 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         [90, 180],
       ], // Set map bounds to world limits
       maxBoundsViscosity: 1.0, // Keep map within bounds
-    }).setView([0, 0], 3);
+    }).setView([15.5, 78.5], 5.5);
 
     // Premium map tiles with retina support
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      minZoom: 2,
+      minZoom: 2.5,
       attribution:
         '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       className: 'premium-map-tiles',
@@ -351,34 +351,50 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
+  // centerMapOnData(): void {
+  //   const allPoints: L.LatLngExpression[] = [];
+
+  //   this.vessels.forEach((v) => {
+  //     if (v.last_position.latitude && v.last_position.longitude) {
+  //       allPoints.push([v.last_position.latitude, v.last_position.longitude]);
+  //     }
+  //   });
+
+  //   this.lighthouses.forEach((l) => {
+  //     if (l.latitude && l.longitude) {
+  //       allPoints.push([l.latitude, l.longitude]);
+  //     }
+  //   });
+
+  //   if (allPoints.length > 0) {
+  //     const bounds = L.latLngBounds(allPoints);
+  //     this.map.fitBounds(bounds, {
+  //       padding: [50, 50],
+  //       maxZoom: 10,
+  //       animate: true,
+  //       duration: 1,
+  //     });
+
+  //     // Store the original bounds to return to later
+  //     this.originalMapBounds = bounds;
+  //   }
+  // }
+
   centerMapOnData(): void {
-    const allPoints: L.LatLngExpression[] = [];
+  // Fixed center coordinates
+  const center: L.LatLngExpression = [15.5, 78.5];
+  const zoomLevel = 5.5;
 
-    this.vessels.forEach((v) => {
-      if (v.last_position.latitude && v.last_position.longitude) {
-        allPoints.push([v.last_position.latitude, v.last_position.longitude]);
-      }
-    });
+  // Set the map view to the fixed center and zoom
+  this.map.setView(center, zoomLevel, {
+    animate: true,
+    duration: 1,
+  });
 
-    this.lighthouses.forEach((l) => {
-      if (l.latitude && l.longitude) {
-        allPoints.push([l.latitude, l.longitude]);
-      }
-    });
+  // Optional: you can reset originalMapBounds if needed
+  this.originalMapBounds = null; // or leave undefined
+}
 
-    if (allPoints.length > 0) {
-      const bounds = L.latLngBounds(allPoints);
-      this.map.fitBounds(bounds, {
-        padding: [50, 50],
-        maxZoom: 10,
-        animate: true,
-        duration: 1,
-      });
-
-      // Store the original bounds to return to later
-      this.originalMapBounds = bounds;
-    }
-  }
 
   getVesselIconByType(vessel: Vessel): string {
     // Assign icon based on vessel type if available
